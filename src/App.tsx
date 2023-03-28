@@ -1,47 +1,19 @@
-import { useQuery, gql } from "@apollo/client";
+import { useState } from "react";
+import LaunchDetails from "./components/LaunchDetails.tsx/LaunchDetails";
+import LaunchList from "./components/LaunchList/LaunchList";
+const App: React.FC = () => {
+  const [launchId, setLaunchId] = useState<string>();
 
-function DisplayLocations() {
-  const { loading, error, data } = useQuery(GET_ROCKERS);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error : {error.message}</p>;
-  console.log(data);
   return (
-    <div>
-      {data.rockets.map(({ id, name }: any) => (
-        <div key={id}>
-          <h3>{name}</h3>
-          <h3>{id}</h3>
-        </div>
-      ))}
+    <div className="max-w-screen-2xl flex mx-auto overflow-hidden h-screen">
+      <div className="max-w-xs overflow-y-scroll ">
+        <LaunchList setLaunchId={setLaunchId} />
+      </div>
+      <div className="w-full overflow-y-scroll">
+        {!!launchId && <LaunchDetails launchId={launchId} />}
+      </div>
     </div>
   );
-}
+};
 
-const GET_ROCKERS = gql`
-  query getRockets($limit) {
-    rockets(limit:) {
-      id
-      name
-    }
-    dragons {
-    name
-    first_flight
-    diameter {
-      feet
-    }
-    launch_payload_mass {
-      lb
-    }
-  }
-  }
-`;
-
-export default function App() {
-  return (
-    <div>
-      <h2>My first Apollo app 🚀</h2>
-      <DisplayLocations></DisplayLocations>
-    </div>
-  );
-}
+export default App;
